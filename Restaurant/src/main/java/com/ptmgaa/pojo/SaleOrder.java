@@ -54,6 +54,10 @@ public class SaleOrder implements Serializable {
     
     @Column(name = "status")
     private String status;
+    
+    @Column(name = "reservation_time")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date reservationTime;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "orderId")
     private Set<OrderDetail> orderDetailSet;
@@ -61,6 +65,10 @@ public class SaleOrder implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "orderId")
     private Set<Transaction> transactionSet;
 
+    @ManyToOne
+    @JoinColumn(name = "table_id")
+    private DiningTable diningTable;
+    
     public SaleOrder() {
     }
 
@@ -207,5 +215,33 @@ public class SaleOrder implements Serializable {
      */
     public void setTransactionSet(Set<Transaction> transactionSet) {
         this.transactionSet = transactionSet;
+    }
+
+    /**
+     * @return the diningTable
+     */
+    public DiningTable getDiningTable() {
+        return diningTable;
+    }
+
+    /**
+     * @param diningTable the diningTable to set
+     */
+    public void setDiningTable(DiningTable diningTable) {
+        this.diningTable = diningTable;
+    }
+
+    /**
+     * @return the reservationTime
+     */
+    public Date getReservationTime() {
+        return reservationTime;
+    }
+
+    /**
+     * @param reservationTime the reservationTime to set
+     */
+    public void setReservationTime(Date reservationTime) {
+        this.reservationTime = reservationTime;
     }
 }
