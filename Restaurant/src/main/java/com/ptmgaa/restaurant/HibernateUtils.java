@@ -34,7 +34,7 @@ public class HibernateUtils {
         props.setProperty(Environment.HBM2DDL_AUTO, "update");
         
         conf.setProperties(props);
-        
+        conf.addAnnotatedClass(DiningTable.class);
         conf.addAnnotatedClass(Role.class);
         conf.addAnnotatedClass(User.class);
         conf.addAnnotatedClass(Category.class);
