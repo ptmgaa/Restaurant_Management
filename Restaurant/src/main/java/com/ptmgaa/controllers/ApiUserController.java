@@ -9,6 +9,7 @@ import com.ptmgaa.service.UserService;
 import com.ptmgaa.utils.JwtUtils;
 import java.security.Principal;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -86,7 +87,26 @@ public class ApiUserController {
 
     @RequestMapping("/secure/profile")
     @ResponseBody
-    public ResponseEntity<User> getProfile(Principal principal) {
-        return new ResponseEntity<>(this.userService.getUserByUsername(principal.getName()), HttpStatus.OK);
+    public ResponseEntity<?> getProfile(Principal principal) {
+        User currentUser = this.userService.getUserByUsername(principal.getName());
+
+        if (currentUser == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Không tìm thấy người dùng");
+        }
+
+        Map<String, Object> profile = new HashMap<>();
+        profile.put("id", currentUser.getId());
+        profile.put("username", currentUser.getUsername());
+        profile.put("fullName", currentUser.getFullName());
+        profile.put("email", currentUser.getEmail());
+        profile.put("phone", currentUser.getPhone());
+        profile.put("avatar", currentUser.getAvatar());
+        profile.put("isApproved", currentUser.getIsApproved());
+
+        if (currentUser.getRoleId() != null) {
+            profile.put("roleName", currentUser.getRoleId().getName()); 
+        }
+
+        return new ResponseEntity<>(profile, HttpStatus.OK);
     }
 }
