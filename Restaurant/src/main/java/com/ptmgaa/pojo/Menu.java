@@ -43,7 +43,7 @@ public class Menu implements Serializable {
     @JoinTable(name = "menu_dish", joinColumns = {
         @JoinColumn(name = "menu_id", referencedColumnName = "id")}, inverseJoinColumns = {
         @JoinColumn(name = "dish_id", referencedColumnName = "id")})
-    @ManyToMany
+    @ManyToMany(fetch = jakarta.persistence.FetchType.EAGER)
     private Set<Dish> dishSet;
 
     public Menu() {

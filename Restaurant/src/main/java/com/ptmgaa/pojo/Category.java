@@ -4,6 +4,7 @@
  */
 package com.ptmgaa.pojo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -39,8 +40,11 @@ public class Category implements Serializable {
     private String name;
     @Column(name = "description")
     private String description;
+    @Column(name = "active")
+    private Boolean active = true;
 
     @OneToMany(mappedBy = "categoryId")
+    @JsonIgnore
     private Set<Dish> dishSet;
 
     public Category() {
@@ -134,4 +138,19 @@ public class Category implements Serializable {
     public void setDishSet(Set<Dish> dishSet) {
         this.dishSet = dishSet;
     }
+
+    /**
+     * @return the active
+     */
+    public Boolean getActive() {
+        return active;
+    }
+
+    /**
+     * @param active the active to set
+     */
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
+    
 }

@@ -5,6 +5,7 @@
 package com.ptmgaa.pojo;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Basic;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -68,12 +69,15 @@ public class User implements Serializable {
     private Role roleId;
 
     @OneToMany(mappedBy = "chefId")
+    @JsonIgnore
     private Set<Dish> dishSet;
 
     @OneToMany(mappedBy = "customerId")
+    @JsonIgnore
     private Set<SaleOrder> saleOrderSet;
 
     @OneToMany(mappedBy = "customerId")
+    @JsonIgnore
     private Set<Review> reviewSet;
 
     public User() {
