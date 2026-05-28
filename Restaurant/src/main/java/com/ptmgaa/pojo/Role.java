@@ -4,6 +4,7 @@
  */
 package com.ptmgaa.pojo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Basic;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -41,6 +42,7 @@ public class Role implements Serializable {
     private String name;
     
     @OneToMany(mappedBy = "roleId")
+    @JsonIgnore
     private Set<User> userSet;
 
     public Role() {

@@ -5,6 +5,7 @@
 package com.ptmgaa.pojo;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Basic;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -20,8 +21,10 @@ import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import java.io.Serializable;
 import java.util.Set;
+import org.springframework.web.multipart.MultipartFile;
 /**
  *
  * @author Miee
@@ -32,6 +35,8 @@ import java.util.Set;
     @NamedQuery(name = "Dish.findAll", query = "SELECT d FROM Dish d"),
     @NamedQuery(name = "Dish.findById", query = "SELECT d FROM Dish d WHERE d.id = :id")})
 public class Dish implements Serializable {
+
+
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -51,7 +56,12 @@ public class Dish implements Serializable {
     private Double price;
     @Column(name = "prep_time")
     private Integer prepTime;
-
+    @Column(name = "active")
+    private Boolean active = true;
+   
+    @Transient
+    private MultipartFile file;
+    
     @JoinColumn(name = "category_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Category categoryId;
@@ -64,15 +74,19 @@ public class Dish implements Serializable {
         @JoinColumn(name = "dish_id", referencedColumnName = "id")}, inverseJoinColumns = {
         @JoinColumn(name = "ingredient_id", referencedColumnName = "id")})
     @ManyToMany
+    @JsonIgnore
     private Set<Ingredient> ingredientSet;
 
     @ManyToMany(mappedBy = "dishSet")
+    @JsonIgnore
     private Set<Menu> menuSet;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "dishId")
+    @JsonIgnore
     private Set<OrderDetail> orderDetailSet;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "dishId")
+    @JsonIgnore
     private Set<Review> reviewSet;
 
     public Dish() {
@@ -276,5 +290,33 @@ public class Dish implements Serializable {
      */
     public void setReviewSet(Set<Review> reviewSet) {
         this.reviewSet = reviewSet;
+    }
+
+    /**
+     * @return the active
+     */
+    public Boolean getActive() {
+        return active;
+    }
+
+    /**
+     * @param active the active to set
+     */
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
+    
+        /**
+     * @return the file
+     */
+    public MultipartFile getFile() {
+        return file;
+    }
+
+    /**
+     * @param file the file to set
+     */
+    public void setFile(MultipartFile file) {
+        this.file = file;
     }
 }

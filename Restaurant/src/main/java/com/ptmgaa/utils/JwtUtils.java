@@ -39,6 +39,9 @@ public class JwtUtils {
     }
 
     public static String validateTokenAndGetUsername(String token) {
+        if (token == null || token.isEmpty()) { 
+        return null;
+        }
         try {
             SignedJWT signedJWT = SignedJWT.parse(token);
             

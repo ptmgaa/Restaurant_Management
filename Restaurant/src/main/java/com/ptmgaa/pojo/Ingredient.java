@@ -5,6 +5,7 @@
 package com.ptmgaa.pojo;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -40,6 +41,7 @@ public class Ingredient implements Serializable {
     private String description;
 
     @ManyToMany(mappedBy = "ingredientSet")
+    @JsonIgnore
     private Set<Dish> dishSet;
 
     public Ingredient() {
