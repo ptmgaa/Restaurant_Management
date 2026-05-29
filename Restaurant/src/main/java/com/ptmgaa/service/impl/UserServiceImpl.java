@@ -48,6 +48,43 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User addUser(Map<String, String> params, MultipartFile avatar) {
+        String username = params.get("username");
+        String password = params.get("password");
+        String email = params.get("email");
+        String fullName = params.get("fullName");
+        String phone = params.get("phone");
+        
+        int roleId = params.get("roleId") != null ? Integer.parseInt(params.get("roleId")) : 3;
+        if (roleId == 1) {
+            throw new IllegalArgumentException("Không được phép tạo tài khoản Admin qua API này!");
+        }
+        
+        if (username == null || username.trim().isEmpty() ||
+            password == null || password.trim().isEmpty() ||
+            email == null || email.trim().isEmpty() ||
+            fullName == null || fullName.trim().isEmpty()) {
+            throw new IllegalArgumentException("Vui lòng điền đầy đủ Username, Password, FullName, Email!");
+        }
+        if (username.length() < 5) {
+            throw new IllegalArgumentException("Username phải từ 5 ký tự trở lên!");
+        }
+
+        if (this.userRepo.getUserByUsername(username) != null) {
+            throw new IllegalArgumentException("Username này đã tồn tại!");
+        }
+
+        if (!password.matches("^(?=.*[A-Za-z])(?=.*\\d).{6,}$")) {
+            throw new IllegalArgumentException("Mật khẩu phải từ 6 ký tự trở lên và chứa cả chữ và số!");
+        }
+
+        if (!email.contains("@")) {
+            throw new IllegalArgumentException("Email không hợp lệ (phải có ký tự @)!");
+        }
+
+        if (phone != null && !phone.trim().isEmpty() && !phone.matches("\\d{10}")) {
+            throw new IllegalArgumentException("Số điện thoại phải đúng 10 chữ số!");
+        }
+        
         User u = new User();
         u.setFullName(params.get("fullName"));
         u.setPhone(params.get("phone"));
@@ -56,7 +93,6 @@ public class UserServiceImpl implements UserService {
         u.setPassword(passwordEncoder.encode(params.get("password")));
         
         Role role = new Role();
-        int roleId = params.get("roleId") != null ? Integer.parseInt(params.get("roleId")) : 3;
         role.setId(roleId);
         u.setRoleId(role);
         
@@ -66,7 +102,7 @@ public class UserServiceImpl implements UserService {
             u.setIsApproved(true);
         }
 
-        if (!avatar.isEmpty()) {
+        if (avatar != null && !avatar.isEmpty()) {
             try {
                 Map res = this.cloudinary.uploader().upload(avatar.getBytes(),
                         ObjectUtils.asMap("resource_type", "auto"));

@@ -38,11 +38,16 @@ public class ApiUserController {
     @PostMapping(path = "/users", 
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE, 
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<User> create(@RequestParam Map<String, String> params, 
-            @RequestParam(value = "avatar") MultipartFile avatar) {
-        User u = this.userService.addUser(params, avatar);
-        
+    public ResponseEntity<?> create(@RequestParam Map<String, String> params, 
+            @RequestParam(value = "avatar", required = false) MultipartFile avatar) {
+        try {
+            User u = this.userService.addUser(params, avatar);
         return new ResponseEntity<>(u, HttpStatus.CREATED);
+        } catch (IllegalArgumentException ex) {
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (Exception ex) {
+            return new ResponseEntity<>("Lỗi hệ thống", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
     
     @PostMapping("/login")
