@@ -67,4 +67,9 @@ public class DishServiceImpl implements DishService {
     public void deleteDish(int id) {
         this.dishRepo.deleteDish(id);
     }
+    
+    @Override
+    public List<Dish> compareDishes(List<Integer> ids) {
+        return this.dishRepo.compareDishes(ids);
+    }
 }

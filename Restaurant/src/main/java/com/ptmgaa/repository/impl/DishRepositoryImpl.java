@@ -21,6 +21,8 @@ import org.springframework.core.env.Environment;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.JoinType;
 /**
  *
  * @author Miee
@@ -79,6 +81,7 @@ public class DishRepositoryImpl implements DishRepository {
         }
         
         q.where(predicates.toArray(Predicate[]::new));
+        
         String sort = params.get("sort");
         if (sort != null && !sort.isEmpty()) {
             if (sort.equals("price_asc")) {
@@ -87,6 +90,10 @@ public class DishRepositoryImpl implements DishRepository {
                 q.orderBy(b.desc(root.get("price")));
             } else if (sort.equals("name")) {
                 q.orderBy(b.asc(root.get("name")));
+            } else if (sort.equals("rating_desc")) {
+                Join<Object, Object> reviewJoin = root.join("reviewSet", JoinType.LEFT);
+                q.groupBy(root.get("id"));
+                q.orderBy(b.desc(b.avg(reviewJoin.get("rating"))), b.desc(root.get("id")));
             }
         } else {
             q.orderBy(b.desc(root.get("id")));
@@ -130,5 +137,16 @@ public class DishRepositoryImpl implements DishRepository {
             d.setActive(false);
             session.merge(d);
         }
+    }
+    
+    @Override
+    public List<Dish> compareDishes(List<Integer> ids) {
+        if (ids == null || ids.isEmpty()) {
+            return new java.util.ArrayList<>();
+        }
+        Session session = this.factory.getObject().getCurrentSession();
+        org.hibernate.query.Query<Dish> q = session.createQuery("FROM Dish d WHERE d.id IN :ids", Dish.class);
+        q.setParameter("ids", ids);
+        return q.getResultList();
     }
 }

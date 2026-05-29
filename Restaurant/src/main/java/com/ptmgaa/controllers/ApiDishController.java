@@ -80,4 +80,12 @@ public class ApiDishController {
     public void delete(@PathVariable(value = "dishId") int id) {
         this.dishService.deleteDish(id);
     }
+    
+    @GetMapping("/dishes/compare")
+    public ResponseEntity<List<Dish>> compareDishes(@RequestParam(value = "ids") List<Integer> ids) {
+        if (ids == null || ids.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(this.dishService.compareDishes(ids), HttpStatus.OK);
+    }
 }
