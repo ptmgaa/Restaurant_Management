@@ -38,9 +38,15 @@ public class ApiMenuController {
     }
     
     @PostMapping("/secure/menus")
-    public ResponseEntity<Menu> addMenu(@RequestBody Menu menu) {
-        this.menuService.addOrUpdateMenu(menu);
-        return new ResponseEntity<>(menu, HttpStatus.CREATED);
+    public ResponseEntity<?> addMenu(@RequestBody Menu menu) {
+        try {
+            this.menuService.addOrUpdateMenu(menu);
+            return new ResponseEntity<>(menu, HttpStatus.CREATED);
+        } catch (SecurityException ex) {
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.FORBIDDEN);
+        } catch (Exception ex) {
+            return new ResponseEntity<>("Lỗi hệ thống!", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
     
     @DeleteMapping("/secure/menus/{menuId}")
@@ -51,10 +57,14 @@ public class ApiMenuController {
 
     @PostMapping("/secure/menus/{menuId}/dishes/{dishId}")
     public ResponseEntity<?> addDishToMenu(@PathVariable("menuId") int menuId, @PathVariable("dishId") int dishId) {
-        if (this.menuService.addDishToMenu(menuId, dishId)) {
-            return new ResponseEntity<>("Thêm món vào thực đơn thành công!", HttpStatus.OK);
+        try {
+            if (this.menuService.addDishToMenu(menuId, dishId)) {
+                return new ResponseEntity<>("Thêm món vào thực đơn thành công!", HttpStatus.OK);
+            }
+            return new ResponseEntity<>("Không tìm thấy thực đơn hoặc món ăn!", HttpStatus.BAD_REQUEST);
+        } catch (SecurityException ex) {
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.FORBIDDEN);
         }
-        return new ResponseEntity<>("Không tìm thấy thực đơn hoặc món ăn!", HttpStatus.BAD_REQUEST);
     }
 
     @DeleteMapping("/secure/menus/{menuId}/dishes/{dishId}")

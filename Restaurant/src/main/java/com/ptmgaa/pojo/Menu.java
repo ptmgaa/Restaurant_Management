@@ -4,6 +4,7 @@
  */
 package com.ptmgaa.pojo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -13,6 +14,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
@@ -45,6 +47,11 @@ public class Menu implements Serializable {
         @JoinColumn(name = "dish_id", referencedColumnName = "id")})
     @ManyToMany(fetch = jakarta.persistence.FetchType.EAGER)
     private Set<Dish> dishSet;
+    
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @ManyToOne
+    @JsonIgnore
+    private User userId;
 
     public Menu() {
     }
@@ -136,5 +143,18 @@ public class Menu implements Serializable {
      */
     public void setDishSet(Set<Dish> dishSet) {
         this.dishSet = dishSet;
+    }
+    /**
+     * @return the userId
+     */
+    public User getUserId() {
+        return userId;
+    }
+
+    /**
+     * @param userId the userId to set
+     */
+    public void setUserId(User userId) {
+        this.userId = userId;
     }
 }
