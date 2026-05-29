@@ -5,9 +5,12 @@
 package com.ptmgaa.controllers;
 
 import com.ptmgaa.pojo.Dish;
+import com.ptmgaa.pojo.Ingredient;
 import com.ptmgaa.service.DishService;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -49,8 +52,27 @@ public class ApiDishController {
     
     @PostMapping(path = "/secure/dishes", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public void addOrUpdate(@ModelAttribute Dish d) {
-        this.dishService.addOrUpdateDish(d);
+    public ResponseEntity<?> addOrUpdate(@ModelAttribute Dish d, 
+                            @RequestParam(value = "ingredientIds", required = false) List<Integer> ingredientIds) {
+        
+        try {
+            if (ingredientIds != null && !ingredientIds.isEmpty()) {
+                Set<Ingredient> ingredients = new HashSet<>();
+                for (Integer id : ingredientIds) {
+                    Ingredient ing = new Ingredient();
+                    ing.setId(id);
+                    ingredients.add(ing);
+                }
+                d.setIngredientSet(ingredients);
+            }
+            
+            this.dishService.addOrUpdateDish(d);
+            return new ResponseEntity<>(d, HttpStatus.CREATED);
+            
+        } catch (Exception ex) {
+            ex.printStackTrace(); 
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
     
     @DeleteMapping("/secure/dishes/{dishId}")
