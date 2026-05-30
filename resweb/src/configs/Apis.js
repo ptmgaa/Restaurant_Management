@@ -14,6 +14,8 @@ export const endpoints = {
   'secure-dishes': '/api/secure/dishes',
   'delete-dish': (dishId) => `/api/secure/dishes/${dishId}`,
   'dish-details': (dishId) => `/api/dishes/${dishId}`,
+  'reviews': (dishId) => `/api/dishes/${dishId}/reviews`,
+  'add-review': (dishId) => `/api/secure/dishes/${dishId}/reviews`,
 };
 
 export const authApis = () => {
