@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package com.ptmgaa.pojo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -41,6 +42,7 @@ public class Review implements Serializable {
 
     @JoinColumn(name = "dish_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
+    @JsonIgnore
     private Dish dishId;
 
     @Basic(optional = false)
