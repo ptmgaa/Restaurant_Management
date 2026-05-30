@@ -32,4 +32,8 @@ export const authApis = () => {
 export default axios.create({
   baseURL: API_URL,
   withCredentials: true
+<<<<<<< HEAD
 });
+=======
+});
+>>>>>>> 86e8e36df4763f6991a047555adfc41009bcb0f7
