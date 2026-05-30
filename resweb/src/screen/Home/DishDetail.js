@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { Container, Row, Col, Button, Spinner, Card, Badge } from "react-bootstrap";
+import { Container, Row, Col, Button, Card, Badge } from "react-bootstrap";
 import { useParams, useNavigate } from "react-router-dom";
 import Apis, { endpoints } from "../../configs/Apis";
+import MySpinner from "../../components/MySpinner";
 
 const DishDetail = () => {
   const { dishId } = useParams(); 
@@ -29,12 +30,7 @@ const DishDetail = () => {
   };
 
   if (loading) {
-    return (
-      <Container className="text-center my-5">
-        <Spinner animation="border" variant="success" size="lg" />
-        <p className="mt-3 text-muted">Đang tải thông tin chi tiết món ăn...</p>
-      </Container>
-    );
+    return <MySpinner />;
   }
 
   if (!dish) {
