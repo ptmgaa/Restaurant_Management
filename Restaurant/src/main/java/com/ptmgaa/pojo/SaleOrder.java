@@ -3,10 +3,13 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package com.ptmgaa.pojo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Basic;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -49,25 +52,31 @@ public class SaleOrder implements Serializable {
     @Column(name = "total_amount")
     private Double totalAmount;
     
+    @Enumerated(EnumType.STRING)
     @Column(name = "payment_method")
-    private String paymentMethod;
+    private PaymentMethod paymentMethod;
     
+    @Enumerated(EnumType.STRING)
     @Column(name = "status")
-    private String status;
+    private OrderStatus status;
     
     @Column(name = "reservation_time")
     @Temporal(TemporalType.TIMESTAMP)
     private Date reservationTime;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "orderId")
+    @JsonIgnore
     private Set<OrderDetail> orderDetailSet;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "orderId")
+    @JsonIgnore
     private Set<Transaction> transactionSet;
 
     @ManyToOne
     @JoinColumn(name = "table_id")
     private DiningTable diningTable;
+    
+    
     
     public SaleOrder() {
     }
@@ -164,30 +173,6 @@ public class SaleOrder implements Serializable {
     /**
      * @return the paymentMethod
      */
-    public String getPaymentMethod() {
-        return paymentMethod;
-    }
-
-    /**
-     * @param paymentMethod the paymentMethod to set
-     */
-    public void setPaymentMethod(String paymentMethod) {
-        this.paymentMethod = paymentMethod;
-    }
-
-    /**
-     * @return the status
-     */
-    public String getStatus() {
-        return status;
-    }
-
-    /**
-     * @param status the status to set
-     */
-    public void setStatus(String status) {
-        this.status = status;
-    }
 
     /**
      * @return the orderDetailSet
@@ -243,5 +228,33 @@ public class SaleOrder implements Serializable {
      */
     public void setReservationTime(Date reservationTime) {
         this.reservationTime = reservationTime;
+    }
+
+    /**
+     * @return the paymentMethod
+     */
+    public PaymentMethod getPaymentMethod() {
+        return paymentMethod;
+    }
+
+    /**
+     * @param paymentMethod the paymentMethod to set
+     */
+    public void setPaymentMethod(PaymentMethod paymentMethod) {
+        this.paymentMethod = paymentMethod;
+    }
+
+    /**
+     * @return the status
+     */
+    public OrderStatus getStatus() {
+        return status;
+    }
+
+    /**
+     * @param status the status to set
+     */
+    public void setStatus(OrderStatus status) {
+        this.status = status;
     }
 }

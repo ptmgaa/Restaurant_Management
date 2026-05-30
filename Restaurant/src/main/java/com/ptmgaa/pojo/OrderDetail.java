@@ -4,6 +4,7 @@
  */
 package com.ptmgaa.pojo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -35,6 +36,7 @@ public class OrderDetail implements Serializable {
     
     @JoinColumn(name = "order_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
+    @JsonIgnore
     private SaleOrder orderId;
     
     @JoinColumn(name = "dish_id", referencedColumnName = "id")

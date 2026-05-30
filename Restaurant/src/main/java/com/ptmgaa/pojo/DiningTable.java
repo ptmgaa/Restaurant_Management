@@ -4,6 +4,7 @@
  */
 package com.ptmgaa.pojo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -34,6 +35,7 @@ public class DiningTable implements Serializable {
     private String status = "AVAILABLE";
 
     @OneToMany(mappedBy = "diningTable")
+    @JsonIgnore
     private Set<SaleOrder> orders;
 
     /**
